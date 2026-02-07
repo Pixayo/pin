@@ -1,6 +1,6 @@
 import sys
 import json
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
 
@@ -30,14 +30,14 @@ def main():
     # Main argument
     parser.add_argument('snippet', nargs='?', help='Snippet name to use')
 
-    args = parser.parse_args()
+    args: Namespace = parser.parse_args()
 
     try:
         if args.create_config:
             create_config(CONFIG_PATH)
             return
 
-        config = load_config(CONFIG_PATH)
+        config: dict = load_config(CONFIG_PATH)
 
         if args.add or args.remove or args.change:
             modify_snippets(config, args)
@@ -57,7 +57,7 @@ def main():
 
 # --- Usages ---
 
-def modify_snippets(config, args):
+def modify_snippets(config: dict, args: Namespace):
     snippet = args.snippet
 
     if not snippet:
@@ -78,7 +78,7 @@ def modify_snippets(config, args):
     save_config(CONFIG_PATH, config)
 
 
-def list_snippets(config):    
+def list_snippets(config: dict):    
     print(f"{'SNIPPET':<15} | {'COMMAND'}")
     for name, command in config.items():
         print(f"{name:<15} | {command}")
@@ -106,15 +106,10 @@ def create_config(path: Path):
     with open(path, 'w', encoding='utf-8') as file:
         json.dump(default_config, file, indent=2, ensure_ascii=False)
 
-    print(f'Config file created in {path.absolute()}')
-
 
 def save_config(path: Path, config: dict):
-    try:
-        with open(path, 'w', encoding='utf-8') as file:
-            json.dump(config, file, indent=2, ensure_ascii=False)
-    except json.JSONDecodeError as e:
-        raise ValueError(f'could not save JSON file {path.absolute()}: \n{e.msg}') from e
+    with open(path, 'w', encoding='utf-8') as file:
+        json.dump(config, file, indent=2, ensure_ascii=False)
 
 
 if __name__ == '__main__':
