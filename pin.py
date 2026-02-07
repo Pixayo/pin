@@ -20,19 +20,20 @@ def main():
     # TODO: extra argument for searching snippets
     parser.add_argument('-l', '--list', action='store_true', help='List all snippets')
 
-    parser.add_argument('--generate-config', action='store_true', help='create default config')
+    parser.add_argument('--create-config', action='store_true', help='create default config')
     # TODO: Implement appending different config files
     # parser.add_argument('--append-config', action='store_true', help='Append snippets from home config and current directory config file')
 
     args = parser.parse_args()
 
-    if args.generate_config:
-        create_config()
+    if args.create_config:
+        create_config(CONFIG_PATH)
         return
 
-    config = load_config()
+    config = load_config(CONFIG_PATH)
 
     # Handling flags
+    # FIXME: Every flag should be used alone, if more that one is specified, raise an error
     if args.add or args.remove or args.change:
         modify_snippets(config, args)
     elif args.list:
@@ -40,42 +41,38 @@ def main():
     
     # Primary action
     # TODO: use shell expressions to evaluate and execute
+    # FIXME: modifications in the error handling are not handle properly
     snippet = args.snippet
 
     if snippet:
         if snippet in config:
             print(config[snippet])
         else:
-            print(f'Erro: snippet "{snippet}" not found')
+            print(f'snippet "{snippet}" not found')
     else:
         parser.print_help()
 
-# --- Usages --- exit code 11~19
+# --- Usages ---
 
 def modify_snippets(config, args):
     snippet = args.snippet
 
     if not snippet:
-        print('Erro: snippet not specified')
-        sys.exit(11)
+        raise ValueError('snippet not specified')
     
-    if args.add:
-        if snippet in config:
-            print(f'Erro: snippet "{snippet}" already exists')
-            sys.exit(11)
+    if snippet in config and args.add:
+        raise ValueError(f'snippet "{snippet}" already exists')
+    elif snippet not in config and (args.remove or args.change):
+        raise ValueError(f'snippet "{snippet}" does not exist')
 
+    if args.add:
         config[snippet] = args.add
     elif args.change:
-        if snippet not in config:
-            print(f'Erro: snippet "{snippet}" not found')
-            sys.exit(11)
-
         config[snippet] = args.change
     elif args.remove:
         config.pop(snippet, None)
 
-    save_config(config)
-    sys.exit(0)
+    save_config(CONFIG_PATH, config)
 
 
 def list_snippets(config):
@@ -84,47 +81,43 @@ def list_snippets(config):
     print(f"{'SNIPPET':<15} | {'COMMAND'}")
     for name, command in config.items():
         print(f"{name:<15} | {command}")
-    
-    sys.exit(0)
 
-# --- JSON manipulation --- exit code 2~9
+# --- JSON manipulation --- 
 
-def load_config():
+def load_config(path: Path) -> dict:
+    if not path.exists():
+        raise FileNotFoundError(f'config file not found in {path.absolute()}')
+
     try:
-        with open(CONFIG_PATH, 'r', encoding='utf-8') as file:
+        with open(path, 'r', encoding='utf-8') as file:
             return json.load(file)
-    except FileNotFoundError:
-        print(f'Erro: config file not found in {CONFIG_PATH.absolute()}')
-        sys.exit(2)
-    except json.JSONDecodeError:
-        print(f'Erro: invalid json config file {CONFIG_PATH.absolute()}.')
-        sys.exit(2)
+    except json.JSONDecodeError as e:
+        raise ValueError(f'could not load JSON file {path.absolute()}: \n{e.msg}') from e
 
 
-def create_config():
-    if CONFIG_PATH.exists():
-        print(f'Erro: config file already exists in {CONFIG_PATH.absolute()}')
+def create_config(path: Path):
+    if path.exists():
+        print(f'Erro: config file already exists in {path.absolute()}')
         sys.exit(3)
     
     default_config = {}
     default_config['hello'] = 'echo "Hello World!"'
 
-    with open(CONFIG_PATH, 'w', encoding='utf-8') as file:
+    with open(path, 'w', encoding='utf-8') as file:
         json.dump(default_config, file, indent=2, ensure_ascii=False)
 
-    print(f'Config file created in {CONFIG_PATH.absolute()}')
+    print(f'Config file created in {path.absolute()}')
 
 
-def save_config(config: dict):
+def save_config(path: Path, config: dict):
+    if not path.exists():
+        raise FileNotFoundError(f'config file not found in {path.absolute()}')
+        
     try:
-        with open(CONFIG_PATH, 'w', encoding='utf-8') as file:
+        with open(path, 'w', encoding='utf-8') as file:
             json.dump(config, file, indent=2, ensure_ascii=False)
-    except FileNotFoundError:
-        print(f'Erro: config file not found in {CONFIG_PATH.absolute()}')
-        sys.exit(4)
-    except json.JSONDecodeError:
-        print(f'Erro: invalid json config file {CONFIG_PATH.absolute()}.')
-        sys.exit(4)
+    except json.JSONDecodeError as e:
+        raise ValueError(f'could not save JSON file {path.absolute()}: \n{e.msg}') from e
 
 
 if __name__ == '__main__':
