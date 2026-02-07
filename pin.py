@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 # FIXME: Make config file path global
-CONFIG_PATH = Path('./config.json')
+CONFIG_PATH = Path.home() / '.pin-config.json'
 
 def main():
     parser = ArgumentParser(
@@ -21,7 +21,7 @@ def main():
     parser.add_argument('-l', '--list', action='store_true', help='List all snippets')
 
     parser.add_argument('--generate-config', action='store_true', help='create default config')
-    parser.add_argument('--current-dir', action='store_true', help='look for config file in the current directory')
+    parser.add_argument('--current-dir', action='store_true', help='Use current directory config file')
 
     args = parser.parse_args()
 
@@ -29,7 +29,11 @@ def main():
         create_config()
         return
 
-    config: dict = load_config()
+    config = {}
+    if not args.current_dir:
+        config = load_config(CONFIG_PATH)
+    else:
+        config = load_config(Path('./pin-config.json'))
 
     # Handling flags
     if args.add or args.remove or args.change:
@@ -38,6 +42,8 @@ def main():
         list_snippets(config)
     
     # Primary action
+    snippet = args.snippet
+
     if snippet:
         if snippet in config:
             print(config[snippet])
@@ -85,15 +91,15 @@ def list_snippets(config):
 
 # --- JSON manipulation ---
 
-def load_config():
+def load_config(config_path: Path):
     try:
-        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+        with open(config_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f'Erro: config file not found in {CONFIG_PATH.absolute()}')
+        print(f'Erro: config file not found in {config_path.absolute()}')
         sys.exit(3)
     except json.JSONDecodeError:
-        print(f'Erro: invalid json config file {CONFIG_PATH.absolute()}.')
+        print(f'Erro: invalid json config file {config_path.absolute()}.')
         sys.exit(3)
 
 
