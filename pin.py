@@ -4,25 +4,25 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
 
+# FIXME: Make config file path global
 CONFIG_PATH = Path('./config.json')
 
 def main():
     parser = ArgumentParser(
         prog='pin',
-        description='basic shell snippet manager build with Python'
+        description='Basic shell snippet manager'
     )
 
-    parser.add_argument('snippet', nargs='?', help='predefined snippet to use')
+    parser.add_argument('snippet', nargs='?', help='Snippet name to use')
 
-    parser.add_argument('-a', '--add', type=str, metavar='COMMAND', help='add new snippet and pin a command to it')
+    parser.add_argument('-a', '--add', type=str, metavar='COMMAND', help='Add new snippet')
+    parser.add_argument('-l', '--list', action='store_true', help='List all snippets')
     # parser.add_argument('-r', help='remove snippet or category', action='store_true')
     # parser.add_argument('-c', help='change snippet expression')
-    # parser.add_argument('-s' help='show every snippet under a category', action='store_true')
 
-    parser.add_argument('--generate-config', help='create a default config json', action='store_true')
-    # parser.add_argument('--dump-config', help='dump snippets from one json file to the current config file')
+    parser.add_argument('--generate-config', action='store_true', help='create default config')
 
-    args: Namespace = parser.parse_args()
+    args = parser.parse_args()
 
     if args.generate_config:
         create_config()
@@ -33,10 +33,16 @@ def main():
     # Handling flags
     if args.add:
         add_snippet(config, args.add, args.snippet)
+    elif args.list:
+        list_snippets(config)
     
-
-    print(config[args.snippet])
-
+    if args.snippet:
+        if args.snippet in config:
+            print(config[args.snippet])
+        else:
+            print(f'Erro: snippet {snippet} not found')
+    else:
+        parser.print_help()
 
 # --- Usages ---
 
@@ -55,6 +61,16 @@ def add_snippet(config: dict, command: str, snippet: str):
     with open(CONFIG_PATH, 'w', encoding='utf-8') as file:
         json.dump(config, file, indent=2, ensure_ascii=True)
 
+    sys.exit(0)
+
+
+def list_snippets(config):
+    print(f"{'SNIPPET':<15} | {'COMMAND'}")
+    print("-" * 30)
+    for name, command in config.items():
+        print(f"{name:<15} | {command}")
+    
+    sys.exit(0)
 
 # --- JSON manipulation ---
 
@@ -64,7 +80,7 @@ def create_config():
         sys.exit(2)
     
     default_config = {}
-    default_config['auto-generated'] = 'echo you-can-remove-me'
+    default_config['hello'] = 'echo "Hello World!"'
 
     with open(CONFIG_PATH, 'w', encoding='utf-8') as file:
         json.dump(default_config, file, indent=2, ensure_ascii=True)
@@ -84,4 +100,5 @@ def load_config():
         sys.exit(3)
 
 
-main()
+if __name__ == '__main__':
+    main()
