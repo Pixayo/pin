@@ -12,7 +12,12 @@ def main():
         description='Basic shell snippet manager'
     )
 
-    # TODO: extra argument for "--list", searching snippets by reference
+    # TODO: (list) extra argument for "--list", searching snippets by reference
+    # TODO: Implement appending different config files
+
+    # TODO: use shell expressions to evaluate commands
+    # TODO: (list) Implement searching logic if a extra argument is passed
+
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-a', '--add', type=str, metavar='COMMAND', help='Add new snippet')
     group.add_argument('-c', '--change', type=str, metavar='COMMAND', help='change snippet command')
@@ -20,7 +25,6 @@ def main():
     group.add_argument('-l', '--list', action='store_true', help='List all snippets')
 
     group.add_argument('--create-config', action='store_true', help='create default config')
-    # TODO: Implement appending different config files
     # group.add_argument('--append-config', action='store_true', help='Append snippets from home config and current directory config file')
 
     # Main argument
@@ -28,7 +32,6 @@ def main():
 
     args = parser.parse_args()
 
-    # TODO: use shell expressions to evaluate and execute
     try:
         if args.create_config:
             create_config(CONFIG_PATH)
@@ -75,9 +78,7 @@ def modify_snippets(config, args):
     save_config(CONFIG_PATH, config)
 
 
-def list_snippets(config):
-    # TODO: Implement searching logic if a extra argument is passed
-    
+def list_snippets(config):    
     print(f"{'SNIPPET':<15} | {'COMMAND'}")
     for name, command in config.items():
         print(f"{name:<15} | {command}")
@@ -97,8 +98,7 @@ def load_config(path: Path) -> dict:
 
 def create_config(path: Path):
     if path.exists():
-        print(f'Erro: config file already exists in {path.absolute()}')
-        sys.exit(3)
+        raise ValueError(f'config file already exists in {path.absolute()}')
     
     default_config = {}
     default_config['hello'] = 'echo "Hello World!"'
