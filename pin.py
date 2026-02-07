@@ -4,7 +4,6 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 
-# FIXME: Make config file path global
 CONFIG_PATH = Path.home() / '.pin-config.json'
 
 def main():
@@ -18,10 +17,12 @@ def main():
     parser.add_argument('-a', '--add', type=str, metavar='COMMAND', help='Add new snippet')
     parser.add_argument('-c', '--change', type=str, metavar='COMMAND', help='change snippet command')
     parser.add_argument('-r', '--remove', action='store_true', help='remove snippet')
+    # TODO: add search snippets from list with grep
     parser.add_argument('-l', '--list', action='store_true', help='List all snippets')
 
     parser.add_argument('--generate-config', action='store_true', help='create default config')
-    parser.add_argument('--current-dir', action='store_true', help='Use current directory config file')
+    # TODO: Implement appending different config files
+    # parser.add_argument('--append-config', action='store_true', help='Append snippets from home config and current directory config file')
 
     args = parser.parse_args()
 
@@ -29,11 +30,7 @@ def main():
         create_config()
         return
 
-    config = {}
-    if not args.current_dir:
-        config = load_config(CONFIG_PATH)
-    else:
-        config = load_config(Path('./pin-config.json'))
+    config = load_config()
 
     # Handling flags
     if args.add or args.remove or args.change:
@@ -91,15 +88,15 @@ def list_snippets(config):
 
 # --- JSON manipulation ---
 
-def load_config(config_path: Path):
+def load_config():
     try:
-        with open(config_path, 'r', encoding='utf-8') as f:
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f'Erro: config file not found in {config_path.absolute()}')
+        print(f'Erro: config file not found in {CONFIG_PATH.absolute()}')
         sys.exit(3)
     except json.JSONDecodeError:
-        print(f'Erro: invalid json config file {config_path.absolute()}.')
+        print(f'Erro: invalid json config file {CONFIG_PATH.absolute()}.')
         sys.exit(3)
 
 
