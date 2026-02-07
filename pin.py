@@ -27,17 +27,36 @@ def main():
     if args.generate_config:
         create_config()
         return
-    else:
-        print(f'Erro: could not load {CONFIG_PATH.absolute()} (file not found)')
-        print('Run: pin --generate-config')
-        sys.exit(1)
 
-    config = load_config()
+    config: dict = load_config()
 
+    # Handling flags
     if args.add:
-        add_snippet()
+        add_snippet(config, args.add, args.snippet)
+    
+
+    print(config[args.snippet])
 
 
+# --- Usages ---
+
+def add_snippet(config: dict, command: str, snippet: str):
+    if not snippet:
+        print('Erro: snippet not specified')
+        print('Usage: pin -a [COMMAND] [SNIPPET]')
+        sys.exit(11)
+    
+    if snippet in config:
+        print(f'Erro: snippet {snippet} already exists')
+        sys.exit(11)
+    
+    config[snippet] = command
+
+    with open(CONFIG_PATH, 'w', encoding='utf-8') as file:
+        json.dump(config, file, indent=2, ensure_ascii=True)
+
+
+# --- JSON manipulation ---
 
 def create_config():
     if CONFIG_PATH.exists():
@@ -45,7 +64,7 @@ def create_config():
         sys.exit(2)
     
     default_config = {}
-    default_config['auto-generated'] = 'echo "you can remove me"'
+    default_config['auto-generated'] = 'echo you-can-remove-me'
 
     with open(CONFIG_PATH, 'w', encoding='utf-8') as file:
         json.dump(default_config, file, indent=2, ensure_ascii=True)
