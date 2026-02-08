@@ -18,11 +18,11 @@ def main():
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-a', '--add', type=str, metavar='COMMAND', help='Add new snippet')
-    group.add_argument('-c', '--change', type=str, metavar='COMMAND', help='change snippet command')
-    group.add_argument('-r', '--remove', action='store_true', help='remove snippet')
+    group.add_argument('-c', '--change', type=str, metavar='COMMAND', help='Change snippet command')
+    group.add_argument('-r', '--remove', action='store_true', help='Remove snippet')
     group.add_argument('-l', '--list', action='store_true', help='List all snippets')
 
-    group.add_argument('--create-config', action='store_true', help='create default config')
+    group.add_argument('--create-config', action='store_true', help='Create default config')
     # group.add_argument('--append-config', action='store_true', help='Append snippets from home config and current directory config file')
 
     # Main argument

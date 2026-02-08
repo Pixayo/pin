@@ -11,7 +11,7 @@ def modify_snippets(config: dict, args: Namespace):
 
     if not snippet:
         raise ValueError('snippet not specified')
-    if snippet in config and args.add:
+    elif snippet in config and args.add:
         raise ValueError(f'snippet "{snippet}" already exists')
     elif snippet not in config and (args.remove or args.change):
         raise ValueError(f'snippet "{snippet}" does not exist')
