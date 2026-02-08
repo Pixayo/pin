@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pin-pixayo"
+version = "0.1.0"
+description = "Basic shell snippet manager"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Kaio", email = "kaio.teixeira@proton.me" }
+]
+
+[project.urls]
+repository = "https://github.com/Pixayo/pin"
+
+[project.scripts]
+pin = "pin_pixayo.cli:main"
