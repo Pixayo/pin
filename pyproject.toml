@@ -9,9 +9,23 @@ description = "Basic shell snippet manager"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }
+
 authors = [
     { name = "Kaio", email = "kaio.teixeira@proton.me" }
 ]
+
+keywords = ["cli", "shell", "snippets", "productivity"]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Development Status :: 2 - Pre-Alpha",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License"
+]
+
+dependencies = []
 
 [project.urls]
 repository = "https://github.com/Pixayo/pin"
