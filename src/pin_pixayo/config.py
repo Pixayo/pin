@@ -1,10 +1,11 @@
 from pathlib import Path
+from platformdirs import user_config_dir
 
 
-# TODO: Break down pin-config.json into config.json and snippets.json
+CONFIG_DIR: Path = Path(user_config_dir('pin'))
+CONFIG_PATH: Path = CONFIG_DIR / 'config.json'
+SNIPPET_PATH: Path = CONFIG_DIR / 'snippets.json'
 
-CONFIG_PATH = Path.home() / '.pin-config.json'
-
-DEFAULT_CONFIG = {
+DEFAULT_CONFIG: dict = {
     'hello': 'echo "Hello World!"'
 }

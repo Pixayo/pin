@@ -1,4 +1,3 @@
-import sys
 from argparse import ArgumentParser, Namespace
 
 from .config import *
@@ -8,6 +7,8 @@ from .usages import *
 
 # TODO: Implement appending different config files
 # TODO: use shell expressions to evaluate commands
+
+# FIXME: Implement both config.json and snippets.json properly
 
 def main():
     parser = ArgumentParser(
@@ -33,7 +34,7 @@ def main():
         if args.create_config:
             create_config(CONFIG_PATH)
             print(f'config created in: {CONFIG_PATH}')
-            return
+            return 0
 
         config: dict = load_config(CONFIG_PATH)
 
@@ -50,4 +51,4 @@ def main():
             parser.print_help()
     except (ValueError, FileNotFoundError) as e:
         print(e)
-        sys.exit(1)
+        return 1

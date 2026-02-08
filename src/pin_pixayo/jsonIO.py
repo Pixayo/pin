@@ -18,12 +18,12 @@ def load_config(path: Path) -> dict:
 def create_config(path: Path):
     if path.exists():
         raise ValueError(f'config file already exists in {path.absolute()}')
-
-    with open(path, 'w', encoding='utf-8') as file:
-        json.dump(DEFAULT_CONFIG, file, indent=2, ensure_ascii=False)
+    
+    save_config(path, DEFAULT_CONFIG)
 
 
 def save_config(path: Path, config: dict):
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w', encoding='utf-8') as file:
         json.dump(config, file, indent=2, ensure_ascii=False)
 

@@ -25,7 +25,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
 
-dependencies = []
+dependencies = [
+    "platformdirs>=4.0"
+]
 
 [project.urls]
 repository = "https://github.com/Pixayo/pin"
