@@ -11,8 +11,8 @@ def load_config(path: Path) -> dict:
     try:
         with open(path, 'r', encoding='utf-8') as file:
             return json.load(file)
-    except json.JSONDecodeError as e:
-        raise ValueError(f'could not load JSON file {path.absolute()}: \n{e.msg}') from e
+    except json.JSONDecodeError as err:
+        raise ValueError(f'could not load JSON file {path.absolute()}: \n{err.msg}') from err
 
 
 def create_config(path: Path):
@@ -24,6 +24,7 @@ def create_config(path: Path):
 
 def save_config(path: Path, config: dict):
     path.parent.mkdir(parents=True, exist_ok=True)
+
     with open(path, 'w', encoding='utf-8') as file:
         json.dump(config, file, indent=2, ensure_ascii=False)
 
