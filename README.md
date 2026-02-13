@@ -1,8 +1,8 @@
 <!-- Theme sensitive banner -->
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Pixayo/pin/main/assets/pin-banner-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Pixayo/pin/main/assets/pin-banner-light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Pixayo/pin/assets/assets/pin-banner-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Pixayo/pin/assets/assets/pin-banner-light.png">
     <img alt="Pin repository banner" src="https://placehold.co/512x184?text=404">
   </picture>
 </div>
