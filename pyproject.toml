@@ -32,4 +32,4 @@ dependencies = [
 repository = "https://github.com/Pixayo/pin"
 
 [project.scripts]
-pin = "pin-snippet-manager.cli:main"
+pin = "pin_snippet_manager:main"
