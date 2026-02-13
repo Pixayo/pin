@@ -6,8 +6,7 @@ from .jsonIO import create_config
 from . import usages
 
 
-# TODO: use shell expressions to evaluate commands
-# TODO: 
+# TODO: shell integration
 
 def main():
     parser = ArgumentParser(
@@ -16,31 +15,21 @@ def main():
     )
     subparser = parser.add_subparsers(dest='action', help='Command to run')
 
-    # ADD subcommand
     add = subparser.add_parser('add', help='Add a new snippet')
-    add.add_argument('name', 
-        help='Snippet name'
-    )
-    add.add_argument('cmd', nargs='?', default='', 
-        help='Command to pin surrounded by quotation marks'
-    )
+    add.add_argument('name', help='Snippet name')
+    add.add_argument('cmd', nargs='?', default='', help='Command to pin surrounded by quotation marks')
     add.set_defaults(func=usages.add_snippet)
 
-    # REMOVE subcommand
+    # TODO: implement multiple deletions from a single prompt
     remove = subparser.add_parser('rm', help='Remove a snippet')
-    remove.add_argument('name', 
-        help='Snippet name'
-    )
+    remove.add_argument('name', help='Snippet name')
     remove.set_defaults(func=usages.remove_snippet)
 
-    # SHOW subcommand
+    # TODO: implement search logic when an extra argument is passed
     show = subparser.add_parser('show', help='Show all snippets')
-    show.add_argument('name', nargs='?', 
-        help='Optionally search for a snippet'
-    )
+    show.add_argument('name', nargs='?', help='Optionally search for a snippet')
     show.set_defaults(func=usages.show_snippets)
 
-    # INIT subcommand
     init = subparser.add_parser('init', help='Initialize Pin default setup')
     init.set_defaults(func=usages.initialize)
 
@@ -49,12 +38,6 @@ def main():
     args = parser.parse_args()
 
     try:
-        if args.action == 'init':
-            create_config(CONFIG_PATH)
-            print(f'config created in: {CONFIG_PATH}', file=sys.stderr)
-            return 0
-        
-
         if hasattr(args, 'func'):
             args.func(args)
         else:
