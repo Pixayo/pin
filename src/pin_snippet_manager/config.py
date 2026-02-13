@@ -6,5 +6,5 @@ CONFIG_DIR: Path = Path(user_config_dir('pin'))
 CONFIG_PATH: Path = CONFIG_DIR / 'config.json'
 
 DEFAULT_CONFIG: dict = {
-    "hello": "echo 'Hello World!'"
+    "hello": "'Hello World!'"
 }

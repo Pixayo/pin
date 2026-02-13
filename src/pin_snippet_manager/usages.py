@@ -4,6 +4,15 @@ from .config import CONFIG_PATH
 from .jsonIO import save_config, load_config
 
 
+def print_snippet(args: Namespace):
+    config = load_config(CONFIG_PATH)
+
+    if args.name not in config:
+        raise ValueError(f'snippet {snippet} not found')
+    else:
+        print(config[args.name])
+
+
 def add_snippet(args: Namespace):
     config = load_config(CONFIG_PATH)
 
