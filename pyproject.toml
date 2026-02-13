@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pin-snippet-manager"
 version = "0.1.0"
-description = "Basic shell snippet manager"
+description = "Shell snippet manager"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }
@@ -32,4 +32,4 @@ dependencies = [
 repository = "https://github.com/Pixayo/pin"
 
 [project.scripts]
-pin = "pin_snippet_manager:main"
+pin = "pin_snippet_manager.cli:main"

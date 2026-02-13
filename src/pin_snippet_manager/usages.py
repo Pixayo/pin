@@ -4,7 +4,7 @@ from .config import CONFIG_PATH
 from .jsonIO import save_config, load_config
 
 
-# TODO: extra argument for "--list", searching snippets by reference
+# TODO: implement search logic to show_snippet if an extra argument is passed
 
 def add_snippet(args: Namespace):
     config = load_config(CONFIG_PATH)
@@ -26,7 +26,13 @@ def remove_snippet(args: Namespace):
     save_config(CONFIG_PATH, config)
 
 
-def list_snippets(config: dict):    
+def show_snippets(args: Namespace):    
+    config = load_config(CONFIG_PATH)
+
     print(f"{'SNIPPET':<15} | {'COMMAND'}")
-    for name, command in config.items():
-        print(f"{name:<15} | {command}")
+    for name, cmd in config.items():
+        print(f"{name:<15} | {cmd}")
+
+
+def initialize():
+    pass
