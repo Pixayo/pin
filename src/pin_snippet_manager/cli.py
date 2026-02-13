@@ -36,7 +36,7 @@ def get_parser() -> ArgumentParser:
     use.add_argument('name', help='Snippet name')
     use.set_defaults(func=usages.print_snippet)
 
-    add = subparser.add_parser('add', help='Add a new snippet')
+    add = subparser.add_parser('add', help='Add a snippet')
     add.add_argument('name', help='Snippet name')
     add.add_argument('cmd', nargs='?', default='', help='Command surrounded by quotation marks')
     add.set_defaults(func=usages.add_snippet)
@@ -54,7 +54,5 @@ def get_parser() -> ArgumentParser:
     # TODO: implement initialize function
     init = subparser.add_parser('init', help='Initialize Pin default setup')
     init.set_defaults(func=usages.initialize)
-
-    # TODO: EXEC subcommand, for execution snippets as a Python subprocess
 
     return parser

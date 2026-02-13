@@ -8,7 +8,7 @@ def print_snippet(args: Namespace):
     config = load_config(CONFIG_PATH)
 
     if args.name not in config:
-        raise ValueError(f'snippet {snippet} not found')
+        raise ValueError(f'snippet {args.name} not found')
     else:
         print(config[args.name])
 
