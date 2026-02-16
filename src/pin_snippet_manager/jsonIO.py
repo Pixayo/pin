@@ -12,7 +12,7 @@ def load_config(path: Path) -> dict:
         with open(path, 'r', encoding='utf-8') as file:
             return json.load(file)
     except json.JSONDecodeError as err:
-        raise ValueError(f'could not load JSON file {path.absolute()} \n{err.msg}') from err
+        raise ValueError(f'invalid JSON format in {path.absolute()} \n{err.msg}') from err
 
 
 def save_config(path: Path, config: dict):

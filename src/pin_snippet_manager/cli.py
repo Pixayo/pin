@@ -6,6 +6,7 @@ from .jsonIO import create_config
 from . import usages
 
 
+# TODO: better error handling
 # TODO: shell integration
 
 def main():
@@ -42,17 +43,16 @@ def get_parser() -> ArgumentParser:
     add.set_defaults(func=usages.add_snippet)
 
     # TODO: implement multiple deletions from a single prompt
-    remove = subparser.add_parser('rm', help='Remove a snippet')
-    remove.add_argument('name', help='Snippet name')
-    remove.set_defaults(func=usages.remove_snippet)
+    rm = subparser.add_parser('rm', help='Remove a snippet')
+    rm.add_argument('name', help='Snippet name')
+    rm.set_defaults(func=usages.remove_snippet)
 
     # TODO: implement search logic when "snippet" is passed
     show = subparser.add_parser('show', help='Show all snippets')
     show.add_argument('name', nargs='?', default='', help='Snippet name')
     show.set_defaults(func=usages.show_snippets)
 
-    # TODO: implement initialize function
-    init = subparser.add_parser('init', help='Initialize Pin default setup')
-    init.set_defaults(func=usages.initialize)
+    # init = subparser.add_parser('init', help='Initialize Pin configuration file')
+    # init.set_defaults(func=usages.initialize)
 
     return parser
