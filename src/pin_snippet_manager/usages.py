@@ -1,3 +1,4 @@
+import sys
 from argparse import Namespace
 
 from .config import CONFIG_PATH
@@ -37,10 +38,14 @@ def show_snippets(args: Namespace):
     config = load_config(CONFIG_PATH)
 
     # TODO: search logic
+    
+    header = f"{'SNIPPET':<15} | {'COMMAND'}"
 
-    print(f"{'SNIPPET':<15} | {'COMMAND'}")
-    for name, cmd in config.items():
-        print(f"{name:<15} | {cmd}")
+    rows = [f"{name:<15} | {cmd}" for name, cmd in config.items()]
+
+    result = "\n".join([header] + rows)
+
+    print(result, file=sys.stderr)
 
 
 # TODO
