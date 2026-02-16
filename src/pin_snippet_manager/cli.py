@@ -2,7 +2,7 @@ import sys
 from argparse import ArgumentParser, Namespace
 
 from .config import CONFIG_PATH
-from .jsonIO import create_config
+from .jsonIO import load_config
 from . import usages
 
 
@@ -10,20 +10,23 @@ from . import usages
 # TODO: shell integration
 
 def main():
-
     parser = get_parser()
-
     args = parser.parse_args()
 
     try:
-        if hasattr(args, 'func'):
-            args.func(args)
-        else:
+        if not hasattr(args, 'func'):
             parser.print_help(file=sys.stderr)
+            return 0
+        
+        if args.func == usages.initialize:
+            args.func()
+        else:
+            config = load_config(CONFIG_PATH)
+            args.func(args, config)
 
-    except (ValueError, FileNotFoundError) as err:
+    except (ValueError, KeyError, FileNotFoundError, FileExistsError) as err:
         print(err, file=sys.stderr)
-        return 1        
+        return 1
 
 
 def get_parser() -> ArgumentParser:
@@ -52,7 +55,7 @@ def get_parser() -> ArgumentParser:
     show.add_argument('name', nargs='?', default='', help='Snippet name')
     show.set_defaults(func=usages.show_snippets)
 
-    # init = subparser.add_parser('init', help='Initialize Pin configuration file')
-    # init.set_defaults(func=usages.initialize)
+    init = subparser.add_parser('init', help='Initialize Pin configuration file')
+    init.set_defaults(func=usages.initialize)
 
     return parser

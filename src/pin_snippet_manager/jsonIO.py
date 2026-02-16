@@ -5,14 +5,16 @@ from .config import DEFAULT_CONFIG
 
 
 def load_config(path: Path) -> dict:
-    if not path.exists():
-        raise FileNotFoundError(f'config file not found in {path.absolute()}')
-
     try:
         with open(path, 'r', encoding='utf-8') as file:
             return json.load(file)
+
+    except FileNotFoundError:
+        raise FileNotFoundError(f'file not found: {path.absolute()}')
+
     except json.JSONDecodeError as err:
-        raise ValueError(f'invalid JSON format in {path.absolute()} \n{err.msg}') from err
+        msg = f'invalid JSON format in {path.absolute()}'
+        raise ValueError(f'{msg} \n{err.msg} at line: {err.lineno}') from err
 
 
 def save_config(path: Path, config: dict):
@@ -24,6 +26,6 @@ def save_config(path: Path, config: dict):
 
 def create_config(path: Path):
     if path.exists():
-        raise ValueError(f'config file already exists in {path.absolute()}')
+        raise FileExistsError(f'config file already exists in {path.absolute()}')
     
     save_config(path, DEFAULT_CONFIG)

@@ -2,20 +2,18 @@ import sys
 from argparse import Namespace
 
 from .config import CONFIG_PATH
-from .jsonIO import save_config, load_config
+from .jsonIO import save_config, create_config
 
 
-def print_snippet(args: Namespace):
-    config = load_config(CONFIG_PATH)
+def print_snippet(args: Namespace, config: dict):
 
     if args.name not in config:
-        raise ValueError(f'snippet {args.name} not found')
+        raise KeyError(f'snippet "{args.name}" not found')
     else:
         print(config[args.name])
 
 
-def add_snippet(args: Namespace):
-    config = load_config(CONFIG_PATH)
+def add_snippet(args: Namespace, config: dict):
 
     if args.name in config:
         raise ValueError(f'snippet "{args.name}" already exists')
@@ -24,8 +22,7 @@ def add_snippet(args: Namespace):
     save_config(CONFIG_PATH, config)
 
 
-def remove_snippet(args: Namespace):
-    config = load_config(CONFIG_PATH)
+def remove_snippet(args: Namespace, config: dict):
 
     if args.name not in config:
         raise ValueError(f'snippet "{args.name}" do not exists')
@@ -34,20 +31,18 @@ def remove_snippet(args: Namespace):
     save_config(CONFIG_PATH, config)
 
 
-def show_snippets(args: Namespace):    
-    config = load_config(CONFIG_PATH)
-
-    # TODO: search logic
+# TODO: search logic
+def show_snippets(args: Namespace, config: dict):    
     
     header = f"{'SNIPPET':<15} | {'COMMAND'}"
-
+    
     rows = [f"{name:<15} | {cmd}" for name, cmd in config.items()]
-
+    
     result = "\n".join([header] + rows)
 
     print(result, file=sys.stderr)
 
 
-# TODO
+# TODO: need more testing
 def initialize():
-    pass
+    create_config(CONFIG_PATH)
