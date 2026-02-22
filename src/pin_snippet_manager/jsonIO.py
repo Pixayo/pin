@@ -13,7 +13,7 @@ def load_config(path: Path) -> dict:
         raise FileNotFoundError(f'file not found: {path.absolute()}')
 
     except json.JSONDecodeError as err:
-        msg = f'invalid JSON format in {path.absolute()}'
+        msg = f'invalid JSON format in: {path.absolute()}'
         raise ValueError(f'{msg} \n{err.msg} at line: {err.lineno}') from err
 
 
@@ -26,6 +26,6 @@ def save_config(path: Path, config: dict):
 
 def create_config(path: Path):
     if path.exists():
-        raise FileExistsError(f'config file already exists in {path.absolute()}')
+        raise FileExistsError(f'config file already exists in: {path.absolute()}')
     
     save_config(path, DEFAULT_CONFIG)

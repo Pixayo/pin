@@ -6,8 +6,10 @@ from .jsonIO import load_config
 from . import usages
 
 
-# TODO: better error handling
 # TODO: shell integration
+# TODO: expand README.md
+
+# FIXME: help flag does not work
 
 def main():
     parser = get_parser()
@@ -24,7 +26,7 @@ def main():
             config = load_config(CONFIG_PATH)
             args.func(args, config)
 
-    except (ValueError, KeyError, FileNotFoundError, FileExistsError) as err:
+    except Exception as err:
         print(err, file=sys.stderr)
         return 1
 
